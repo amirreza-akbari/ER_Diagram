@@ -1,3 +1,5 @@
+## 🏥 Hospital Emergency Department ER Chart
+```mermaid
 erDiagram
     EmergencyPatient {
         INT patient_id PK
