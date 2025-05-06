@@ -1,72 +1,92 @@
-## 🏥 Hospital Emergency Department ER Chart
+# 🏥 Hospital Emergency System - ER
+
+This project represents the **Entity Relationship Diagram (ER)** of a Hospital Emergency System. It includes entities such as Patients, Emergency Records, Ambulances, Receptionists, Contacts, and Educational data.
+
+## 📌 Diagram (ER)
+
 ```mermaid
 erDiagram
-    EmergencyPatient {
-        INT patient_id PK
-        STRING name
-        STRING surname
-        INT age
-        STRING gender
-        STRING emergency_status
-        DATETIME arrival_time
+
+    PATIENT ||--o{ EMERGENCY : "has"
+    EMERGENCY ||--o{ AMBULANCE : "uses"
+    PATIENT ||--o{ PATIENT_COMPANION : "has"
+    PATIENT_COMPANION }o--|| CONTACT : "has"
+    EMERGENCY ||--o{ EDUCATION : "has"
+    EMERGENCY ||--o{ RECEPTION : "includes"
+    RECEPTION ||--|| RECEPTIONIST : "by"
+    RECEPTION ||--o{ CONTACT_LOG : "includes"
+    CONTACT_LOG }o--|| CONTACT : "relates to"
+
+    PATIENT {
+        int patient_id PK
+        string name
+        string surname
+        string father_name
+        string national_code
+        string gender
+        string address
     }
 
-    Doctor {
-        INT doctor_id PK
-        STRING name
-        STRING specialty
-        STRING shift
+    PATIENT_COMPANION {
+        int companion_id PK
+        string name
+        string surname
+        string relation
+        string phone
+        int patient_id FK
     }
 
-    Nurse {
-        INT nurse_id PK
-        STRING name
-        STRING shift
-        STRING phone
+    CONTACT {
+        int contact_id PK
+        string name
+        string surname
+        string position
+        string address
+        string number
     }
 
-    EmergencyVisit {
-        INT visit_id PK
-        DATETIME visit_time
-        STRING initial_condition
-        INT patient_id FK
-        INT doctor_id FK
-        INT nurse_id FK
+    EDUCATION {
+        int education_code PK
+        string type
+        string title
+        string degree
     }
 
-    Medication {
-        INT medication_id PK
-        STRING name
-        STRING dosage
-        STRING usage
+    EMERGENCY {
+        int emergency_id PK
+        int patient_id FK
+        int education_code FK
     }
 
-    EmergencyPrescription {
-        INT prescription_id PK
-        DATE date
-        INT patient_id FK
-        INT doctor_id FK
+    RECEPTION {
+        int reception_id PK
+        int patient_id FK
+        int education_code FK
+        int receptionist_id FK
     }
 
-    PrescriptionDetail {
-        INT prescription_id FK
-        INT medication_id FK
-        STRING dose
-        STRING frequency
+    RECEPTIONIST {
+        int receptionist_id PK
+        string username
+        string password
+        string name
+        string surname
+        string phone
     }
 
-    DischargeStatus {
-        INT status_id PK
-        STRING status_type
-        DATE date
-        INT patient_id FK
+    CONTACT_LOG {
+        int contact_log_id PK
+        int receptionist_id FK
+        int contact_id FK
+        string date
+        string description
     }
 
-    EmergencyPatient ||--o{ EmergencyVisit : "has"
-    EmergencyVisit }o--|| Doctor : "by"
-    EmergencyVisit }o--|| Nurse : "assisted by"
-    Doctor ||--o{ EmergencyPrescription : "writes"
-    EmergencyPatient ||--o{ EmergencyPrescription : "receives"
-    EmergencyPrescription ||--o{ PrescriptionDetail : "contains"
-    Medication ||--o{ PrescriptionDetail : "used in"
-    EmergencyPatient ||--|| DischargeStatus : "has"
+    AMBULANCE {
+        int ambulance_id PK
+        string plate
+        string brand
+        string type
+        string driver_name
+        int emergency_id FK
+    }
